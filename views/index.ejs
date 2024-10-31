@@ -4,12 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Index Page</h1>
+<body class="bg-zinc-900">
+    <!-- Centered container for the chessboard -->
+    <div class="w-full h-screen flex items-center justify-center">
+        <!-- Chessboard div -->
+        <div class="chessboard h-96 bg-red-800"></div>
+    </div>
+
+    <!-- Scripts for chess game and socket.io -->
     <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <!-- Link to your custom JavaScript file -->
     <script src="/js/chessgame.js"></script>
-
 </body>
 </html>
