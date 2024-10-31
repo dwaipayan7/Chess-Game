@@ -3,6 +3,7 @@ const socket = require('socket.io');
 const http = require('http');
 const { Chess } = require('chess.js');
 const path = require('path');
+const { log } = require('console');
 
 const app = express();
 const server = http.createServer(app);
@@ -10,7 +11,7 @@ const io = socket(server);
 
 const chess = new Chess();
 let players = {};
-let currentPlayer = "W";
+let currentPlayer = "w";
 
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
@@ -20,12 +21,59 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', function (uniquesocket) {
-    console.log("connected");
+    console.log("Connected");
 
-    uniquesocket.on('Dwaipayan', function () {
-        console.log('Dwaipayan');
+    // uniquesocket.on('Dwaipayan', function () {
+    //     console.log('Dwaipayan');
+    // });
+
+    // uniquesocket.on("disconnect", function(){
+    //     console.log("Disconnected");
+        
+    // })
+
+
+    if (!players.white) {
+        players.white = uniquesocket.id;
+        uniquesocket.emit("playerRole","w");
+    }else if(!players.black){
+        players.black = uniquesocket.id;
+        uniquesocket.emit("playerRole", "b");
+    }else{
+        uniquesocket.emit("spectatorRole");
+    }
+
+    uniquesocket.on("disconnect", function(){
+        if (uniquesocket.id === players.white) {
+            delete players.white
+        }else if(uniquesocket.id === players.black){
+            delete players.black
+        }else{
+            console.log("Spectator disconnected");
+        }
     });
-});
+
+    uniquesocket.on("move", (move)=>{
+        try {
+            if (chess.turn() === "w" && uniquesocket.id !== players.white) return;
+            if(chess.turn() === "b" && uniquesocket.id !== players.black) return;
+
+            const result = chess.move(move);
+            if (result) {
+                currentPlayer = chess.turn();
+                io.emit("move", move);
+                io.emit("boardState", chess.fen())
+            }else{
+                console.log("Invalid move");
+                uniquesocket.emit(move)
+            }
+            
+        }catch (error) {
+            console.log(error);
+        }});
+
+    });
+
 
 server.listen(3000, function () {
     console.log('listening on: 3000');
