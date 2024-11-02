@@ -49,7 +49,24 @@
         }
 
         /* Rotate pieces for black player */
-        .flipped .piece {
+        /* .flipped .piece {
             transform: rotate(180deg);
         }
-    </style> */
+    </style> */ 
+
+
+    .chessboard {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(8, 1fr);
+        gap: 1px;
+        width: 320px;
+        height: 320px;
+    }
+    .square {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
